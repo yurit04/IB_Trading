@@ -25,7 +25,7 @@ class HistoricalBarDataLoader(EClient, EWrapper):
         primaryExchange="ISLAND"            
     ):
         self.bars = []
-        
+
         self.contract = Contract()
         self.contract.symbol = symbol
         self.contract.secType = secType
@@ -56,7 +56,7 @@ class HistoricalBarDataLoader(EClient, EWrapper):
     def historicalDataEnd(self, reqId: int, start: str, end: str):
         self.disconnect()
 
-    def bars_to_csv(self, csv_file):
+    def bars_to_df(self):
         date, open, high, low, close, volume, barCount, average = [], [], [], [], [], [], [], []
         for bar in self.bars:
             date.append(bar.date)
@@ -79,6 +79,10 @@ class HistoricalBarDataLoader(EClient, EWrapper):
             "Average": average
         })
 
+        return bars_df
+
+    def bars_to_csv(self, csv_file):
+        bars_df = self.bars_to_df()
         bars_df.to_csv(csv_file, index=False)
 
 
@@ -89,4 +93,3 @@ if __name__ == "__main__":
         print(bar)
 
     dloader.bars_to_csv("AAPL_TRADES.csv")
-
