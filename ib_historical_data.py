@@ -2,7 +2,7 @@ from ibapi.client import *
 from ibapi.wrapper import *
 import pandas as pd
 
-class HistoricalBarDataLoader(EClient, EWrapper):
+class HistoricalBarsDataLoader(EClient, EWrapper):
 
     def __init__(self, port=7497):
         EClient.__init__(self, self)
@@ -87,7 +87,7 @@ class HistoricalBarDataLoader(EClient, EWrapper):
 
 
 if __name__ == "__main__":
-    dloader = HistoricalBarDataLoader()
+    dloader = HistoricalBarsDataLoader()
     dloader.fetch("AAPL", "20230410 23:59:59 US/Eastern", "1 D", "1 min", "TRADES", useRTH=0)
     for bar in dloader.bars:
         print(bar)
