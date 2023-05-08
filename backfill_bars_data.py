@@ -46,22 +46,30 @@ if __name__ == "__main__":
             bdays = pd.bdate_range(start=last_data_date, end=last_BDay.date(), freq="1 D")[1:]
             ndays = len(bdays)
 
-            dloader = HistoricalBarsDataLoader()
+            if ndays > 0:
+                dloader = HistoricalBarsDataLoader()
 
-            dloader.fetch(
-                stock, endDateTime, f"{ndays} D", barSizeSetting, whatToShow, useRTH=0
-            )
+                dloader.fetch(
+                    stock, endDateTime, f"{ndays} D", barSizeSetting, whatToShow, useRTH=0
+                )
 
-            df_new = dloader.bars_to_df()
+                df_new = dloader.bars_to_df()
 
-            assert df.Date.max() < df_new.Date.max()
+                try:
+                    assert df.Date.max() < df_new.Date.max()
+                except:
+                    print(df.info())
+                    print("\n")
+                    print(df_new.info())
 
-            df = pd.concat([df, df_new])
+                df = pd.concat([df, df_new])
 
-            df.to_csv(os.path.join(dataDir, file), index=False)
+                df.to_csv(os.path.join(dataDir, file), index=False)
 
-            end_time = time.time()
-            print(f"processing {stock} for {endDateTime} took {end_time - start_time : 6.2f} sec")
+                end_time = time.time()
+                print(f"processing {stock} for {endDateTime} took {end_time - start_time : 6.2f} sec")
+            else:
+                print(f"ndays = {ndays}, so skipping {stock}")
 
     print("Finished historical bars data backfill........................................................")
 
