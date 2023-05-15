@@ -20,12 +20,14 @@ if __name__ == "__main__":
     parser.add_argument("dataDir", type=str, help="directory where data is stored", default=None)
     parser.add_argument("-barSizeSetting", type=str, help="duration of bars. i.e 1 min, etc.", default="1 min")
     parser.add_argument("-whatToShow", type=str, help="TRADES MIDPOINT BID ASK", default="TRADES")
+    parser.add_argument("-port", type=int, help="Paper trading port=7497, prod port=7496. paper is default", default=7497)
 
     args = parser.parse_args()
 
     dataDir = args.dataDir
     barSizeSetting = args.barSizeSetting
     whatToShow = args.whatToShow
+    port = args.port
 
     data_files = os.listdir(dataDir)
 
@@ -47,7 +49,7 @@ if __name__ == "__main__":
             ndays = len(bdays)
 
             if ndays > 0:
-                dloader = HistoricalBarsDataLoader()
+                dloader = HistoricalBarsDataLoader(port=port)
 
                 dloader.fetch(
                     stock, endDateTime, f"{ndays} D", barSizeSetting, whatToShow, useRTH=0
